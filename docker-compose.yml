@@ -1,7 +1,11 @@
 version: "3.8"
 services:
   cloudformation:
-    build: .
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      args:
+        - USER_NAME=${USER_NAME}
     volumes:
       - /etc/passwd:/etc/passwd:ro # Valid only if the host OS is Linux
       - /etc/group:/etc/group:ro # Valid only if the host OS is Linux
@@ -12,4 +16,4 @@ services:
       - ${IP}:22:22
 volumes:
   home:
-    name: CloudFormation
+    name: ${VOLUME_NAME}
