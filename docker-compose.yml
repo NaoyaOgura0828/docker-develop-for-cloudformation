@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  cloudformation:
+    build: .
+    volumes:
+      - /etc/passwd:/etc/passwd:ro # Valid only if the host OS is Linux
+      - /etc/group:/etc/group:ro # Valid only if the host OS is Linux
+      - home:/home
+    command: >
+      /bin/sh -c "while sleep 1000; do :; done"
+    ports:
+      - ${IP}:22:22
+volumes:
+  home:
+    name: CloudFormation
