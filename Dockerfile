@@ -1,7 +1,7 @@
 FROM rockylinux:9.0
 
 # Execution user name after container startup
-ARG USER_NAME=NaoyaOgura
+ARG USER_NAME
 
 # Repository Update
 RUN dnf update -y
