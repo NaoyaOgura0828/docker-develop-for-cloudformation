@@ -6,13 +6,16 @@ ARG USER_NAME
 # Repository Update
 RUN dnf update -y
 
-# sudo Install
+# Install sudo
 RUN dnf install sudo -y
 
-# unzip Install
+# Install git
+RUN dnf install git -y
+
+# Install unzip
 RUN dnf install unzip -y
 
-# awscliv2 Install
+# Install awscliv2
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
