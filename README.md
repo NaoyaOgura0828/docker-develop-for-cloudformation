@@ -4,7 +4,7 @@ DockerでCloudFormation開発環境を構築する。
 <br>
 
 # Requirement
-Fedora36ローカル環境で実行確認済。
+Fedora37ローカル環境で実行確認済。
 <br>
 VSCodeとVSCode拡張機能をInstallする。
 - VS Code
@@ -18,6 +18,15 @@ git cloneコマンドで本Repositoryを任意のディレクトリ配下にclon
 
 <br>
 
+## コンテナ名の設定
+`.env`内のCONTAINER_NAMEにコンテナ名を設定する。
+
+```
+CONTAINER_NAME = ${コンテナ名}
+```
+
+<br>
+
 ## 実行ユーザーの設定
 `.env`内のUSER_NAMEにコンテナ起動後の実行ユーザーを設定する。
 
@@ -27,9 +36,7 @@ USER_NAME = ${実行ユーザー名}
 
 <br>
 
-`devcontainer.json`内のcontainerUserにコンテナ起動後の実行ユーザーを設定する。
-<br>
-`devcontainer.json`内のworkspaceFolderにコンテナ起動後の実行ユーザーを設定する。
+`devcontainer.json`内の`containerUser`, `workspaceFolder`にコンテナ起動後の実行ユーザーを設定する。
 
 ```json
 {
@@ -67,7 +74,7 @@ VOLUME_NAME = ${ボリューム名}
 <br>
 
 ## コンテナIPアドレスの設定
-`.env`内のIPアドレスを任意の値に変更する。(例：127.0.0.2)
+`.env`内のIPアドレスを任意の値に変更する。(例：127.0.0.3)
 <br>
 IPアドレスが起動中のコンテナと重複しないように留意する。
 
@@ -82,7 +89,13 @@ IP = ${IPアドレス}
 1. VSCodeを起動し、cloneした本Repositoryフォルダを開く。
 2. ウィンドウ左下緑色の`"><"`を押下し、`"Reopen in Container"`を押下する。
 
+<img src="images/InitialExecution.png">
+
+<br>
+
 2回目以降
 1. VSCodeを起動し、左メニューから拡張機能`リモートエクスプローラー`を押下する。
-2. プルダウンを`Containers`に変更し、コンテナ一覧に表示されている`docker_develop_for_cloudformation-cloudformation-1`にマウスオーバーする。
-3. `docker_develop_for_cloudformation-cloudformation-1`右に表示される`フォルダアイコン`を押下する。
+2. プルダウンを`Containers`に変更し、コンテナ一覧に表示されている`Dev_CloudFormation`にマウスオーバーする。
+3. `Dev_CloudFormation`右に表示される`フォルダアイコン`を押下する。
+
+<img src="images/AfterTheSecond.png">
