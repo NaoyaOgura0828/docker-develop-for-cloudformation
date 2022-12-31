@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 services:
   cloudformation:
     image: ${IMAGE_NAME}
@@ -12,10 +12,13 @@ services:
       - /etc/passwd:/etc/passwd:ro # Valid only if the host OS is Linux
       - /etc/group:/etc/group:ro # Valid only if the host OS is Linux
       - home:/home
-    command: >
-      /bin/sh -c "while sleep 1000; do :; done"
     ports:
       - ${IP}:22:22
+    stdin_open: true
+    tty: true
 volumes:
   home:
     name: ${VOLUME_NAME}
+networks:
+  default:
+    name: ${NETWORK_NAME}
