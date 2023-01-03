@@ -95,7 +95,7 @@ IP = ${IPアドレス}
 
 2回目以降
 1. VSCodeを起動し、左メニューから拡張機能`リモートエクスプローラー`を押下する。
-2. プルダウンを`Containers`に変更し、コンテナ一覧に表示されている`Dev_CloudFormation`にマウスオーバーする。
-3. `Dev_CloudFormation`右に表示される`フォルダアイコン`を押下する。
+2. プルダウンを`Containers`に変更し、コンテナ一覧に表示されている`CloudFormation`にマウスオーバーする。
+3. `CloudFormation`右に表示される`フォルダアイコン`を押下する。
 
 <img src="images/AfterTheSecond.png">
