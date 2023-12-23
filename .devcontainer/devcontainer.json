@@ -1,9 +1,0 @@
-{
-	"name": "CloudFormation 開発環境",
-	"dockerComposeFile": [
-		"../docker-compose.yml"
-	],
-	"service": "cloudformation",
-	"containerUser": "NaoyaOgura",
-	"workspaceFolder": "/home/NaoyaOgura"
-}

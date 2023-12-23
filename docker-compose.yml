@@ -4,21 +4,23 @@ services:
     image: ${IMAGE_NAME}
     container_name: ${CONTAINER_NAME}
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ./cloudformation
+      dockerfile: Dockerfile
       args:
+        - DOCKER_IMAGE_TAG=${DOCKER_IMAGE_TAG}
         - USER_NAME=${USER_NAME}
     volumes:
+      - home:/home
       - /etc/passwd:/etc/passwd:ro # Valid only if the host OS is Linux
       - /etc/group:/etc/group:ro # Valid only if the host OS is Linux
-      - home:/home
-    ports:
-      - ${IP}:22:22
+    user: ${USER_NAME}
     stdin_open: true
     tty: true
+
 volumes:
   home:
     name: ${VOLUME_NAME}
+
 networks:
   default:
     name: ${NETWORK_NAME}
