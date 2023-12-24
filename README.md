@@ -1,4 +1,4 @@
-# docker_develop_for_cloudformation
+# docker-develop-for-cloudformation
 [Docker](https://www.docker.com/)で[CloudFormation](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/Welcome.html)開発環境を構築する。
 
 <br>
