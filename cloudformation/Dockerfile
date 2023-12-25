@@ -46,3 +46,8 @@ RUN mkdir ~/.aws &&\
     touch ~/.aws/credentials &&\
     chmod 600 ~/.aws/config &&\
     chmod 600 ~/.aws/credentials
+
+# Deploy aws_cli_credentials_manager.sh
+COPY ./aws_cli_credentials_manager.sh /home/${USER_NAME}/.aws/
+RUN sudo chown ${USER_NAME}:${USER_NAME} ~/.aws/aws_cli_credentials_manager.sh &&\
+    chmod 700 ~/.aws/aws_cli_credentials_manager.sh
