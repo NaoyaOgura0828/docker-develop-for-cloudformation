@@ -101,3 +101,148 @@ docker compose up -d --build
 <img src='images/RemoteDevelopment_AttachNewWindow.png'>
 
 <br>
+
+## [aws_cli_credentials_manager.sh](cloudformation/aws_cli_credentials_manager.sh)
+[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)は[--profileオプション](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-configure-files.html#cli-configure-files-using-profiles)を使用しない場合、`[default]`のprofileが使用される。<br>
+[NaoyaOgura](https://github.com/NaoyaOgura0828)が開発するCloudFormationのTemplate群は、ShellScript内のAWS CLIコマンド実行によるAWS環境構築を前提としている。<br>
+構築先環境の切替をする為、下記の命名規則で各環境毎に個別のprofileを作成する。
+
+```bash
+${SYSTEM_NAME}-${ENV_TYPE}-${REGION_NAME}
+```
+
+profileは`~/.aws/credentials`へ設定する必要があるが、`~/.aws/credentials`はコメントアウトがサポートされていない。<br>
+[aws_cli_credentials_manager.sh](cloudformation/aws_cli_credentials_manager.sh)を使用する事で、profileの管理を簡略化する事が可能である。
+
+> [!NOTE]
+> `[default]`のprofileは使用しない。
+
+<br>
+
+### Profile設定 有効化
+1. [コンテナ環境へアクセス](#コンテナ環境へのアクセス)し、[~/.aws/aws_cli_credentials_manager.sh](cloudformation/aws_cli_credentials_manager.sh)を開く。
+
+2. [aws_cli_credentials_manager.sh](cloudformation/aws_cli_credentials_manager.sh)内の説明に従い、Profileを設定し、保存する。
+
+```bash
+#!/bin/bash
+
+cat << EOF | grep -v '^#' | awk 'BEGIN { RS = ""; ORS = "\n\n" } { print }' > ~/.aws/credentials
+#
+# Set AWS credentials here
+# https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-configure-files.html#cli-configure-files-format-profile
+#
+# Example of using general
+# [example-dev-tokyo] # Profile (${SYSTEM_NAME}-${ENV_TYPE}-${REGION_NAME})
+# aws_access_key_id = AKIAIOSFODNN7EXAMPLE # Specify AWS Access Key ID
+# aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY # Specify AWS Secret Access Key
+# region = ap-northeast-1 # Specify the region to be used
+#
+# Example of using SwitchRole
+# [example] # SourceProfile (${SYSTEM_NAME})
+# aws_access_key_id = AKIAIOSFODNN7EXAMPLE # Specify AWS Access Key ID
+# aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY # Specify AWS Secret Access Key
+#
+# [example-stg-tokyo] # SwitchRoleProfile (${SYSTEM_NAME}-${ENV_TYPE}-${REGION_NAME})
+# source_profile = example # Specify SourceProfile
+# role_arn = arn:aws:iam::${STG_ACCOUNT_ID}:role/${STG_SWITCH_ROLE_NAME} # Specify the ARN of the switch role to be used
+# mfa_serial = arn:aws:iam::${SOURCE_ACCOUNT_ID}:mfa/${MFA_NAME} # Specify the ARN of the MFA device to be used
+# region = ap-northeast-1 # Specify the region to be used
+#
+
+[testsystem-dev-tokyo]
+aws_access_key_id = AKIAIOSFODNN7EXAMPLE
+aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+region = ap-northeast-1
+
+EOF
+
+exit 0
+
+```
+
+<br>
+
+> [!WARNING]
+> `aws_access_key_id`と`aws_secret_access_key`は絶対にGitHub等にPublicで公開しないこと。<br>
+> AWSアカウントを不正利用される危険性がある[(参考URL)](https://qiita.com/saitotak/items/813ac6c2057ac64d5fef)
+
+<br>
+
+> [!NOTE]
+> [S3バケットの命名規則](https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/userguide/bucketnamingrules.html)に代表される、一部のAWSサービスでは英大文字の使用が許可されていない。<br>
+> [CloudFormation組み込み関数](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html)使用時の不整合を避ける為、`${SYSTEM_NAME}`と`${ENV_TYPE}`は全Systemで小文字を使用することを推奨する。
+
+<br>
+
+3. 下記コマンドを実行する。
+
+```bash
+$ cd ~/.aws/
+$ ./aws_cli_credentials_manager.sh
+```
+
+4. `~/.aws/credentials`が設定されていることを確認する。
+
+```
+[testsystem-dev-tokyo]
+aws_access_key_id = AKIAIOSFODNN7EXAMPLE
+aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+region = ap-northeast-1
+```
+<br>
+
+### Profile設定 無効化
+1. [コンテナ環境へアクセス](#コンテナ環境へのアクセス)し、[~/.aws/aws_cli_credentials_manager.sh](cloudformation/aws_cli_credentials_manager.sh)を開く。
+
+2. 無効化対象のProfileをコメントアウトし、保存する。
+
+```bash
+#!/bin/bash
+
+cat << EOF | grep -v '^#' | awk 'BEGIN { RS = ""; ORS = "\n\n" } { print }' > ~/.aws/credentials
+#
+# Set AWS credentials here
+# https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/cli-configure-files.html#cli-configure-files-format-profile
+#
+# Example of using general
+# [example-dev-tokyo] # Profile (${SYSTEM_NAME}-${ENV_TYPE}-${REGION_NAME})
+# aws_access_key_id = AKIAIOSFODNN7EXAMPLE # Specify AWS Access Key ID
+# aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY # Specify AWS Secret Access Key
+# region = ap-northeast-1 # Specify the region to be used
+#
+# Example of using SwitchRole
+# [example] # SourceProfile (${SYSTEM_NAME})
+# aws_access_key_id = AKIAIOSFODNN7EXAMPLE # Specify AWS Access Key ID
+# aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY # Specify AWS Secret Access Key
+#
+# [example-stg-tokyo] # SwitchRoleProfile (${SYSTEM_NAME}-${ENV_TYPE}-${REGION_NAME})
+# source_profile = example # Specify SourceProfile
+# role_arn = arn:aws:iam::${STG_ACCOUNT_ID}:role/${STG_SWITCH_ROLE_NAME} # Specify the ARN of the switch role to be used
+# mfa_serial = arn:aws:iam::${SOURCE_ACCOUNT_ID}:mfa/${MFA_NAME} # Specify the ARN of the MFA device to be used
+# region = ap-northeast-1 # Specify the region to be used
+#
+
+# [testsystem-dev-tokyo]
+# aws_access_key_id = AKIAIOSFODNN7EXAMPLE
+# aws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+# region = ap-northeast-1
+
+EOF
+
+exit 0
+
+```
+
+<br>
+
+3. 下記コマンドを実行する。
+
+```bash
+$ cd ~/.aws/
+$ ./aws_cli_credentials_manager.sh
+```
+
+4. `~/.aws/credentials`から無効化対象のProfileが削除されていることを確認する。
+
+<br>
