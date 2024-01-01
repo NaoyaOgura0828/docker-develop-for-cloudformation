@@ -13,8 +13,9 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezo
 RUN dnf update -y
 
 # Install Packages
-RUN dnf install sudo -y &&\
-    dnf install git -y &&\
+RUN dnf install git -y &&\
+    dnf install jq -y &&\
+    dnf install sudo -y &&\
     dnf install unzip -y
 
 # Install awscliv2
