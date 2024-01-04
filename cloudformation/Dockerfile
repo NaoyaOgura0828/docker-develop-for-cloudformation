@@ -1,6 +1,6 @@
 # Set the base image
-ARG DOCKER_IMAGE_TAG=${DOCKER_IMAGE_TAG}
-FROM rockylinux:${DOCKER_IMAGE_TAG}
+ARG BASE_IMAGE_TAG=${BASE_IMAGE_TAG}
+FROM rockylinux:${BASE_IMAGE_TAG}
 
 # Set ARG
 ARG TZ=Asia/Tokyo
