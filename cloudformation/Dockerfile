@@ -1,6 +1,6 @@
 # Set the base image
 ARG BASE_IMAGE_TAG=${BASE_IMAGE_TAG}
-FROM rockylinux:${BASE_IMAGE_TAG}
+FROM ubuntu:${BASE_IMAGE_TAG}
 
 # Set ARG
 ARG TZ=Asia/Tokyo
@@ -10,13 +10,19 @@ ARG USER_NAME=${USER_NAME}
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
 
 # Repository Update
-RUN dnf update -y
+RUN apt-get update -y &&\
+    apt-get upgrade -y
 
 # Install Packages
-RUN dnf install git -y &&\
-    dnf install jq -y &&\
-    dnf install sudo -y &&\
-    dnf install unzip -y
+RUN apt-get update -y &&\
+    apt-get install curl -y &&\
+    apt-get install git -y &&\
+    apt-get install jq -y &&\
+    apt-get install sudo -y &&\
+    apt-get install unzip -y &&\
+    apt-get install vim -y &&\
+    apt-get install wget -y &&\
+    apt-get install zip -y
 
 # Install awscliv2
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" &&\
@@ -25,7 +31,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     rm awscliv2.zip
 
 # Add User
-RUN adduser ${USER_NAME} --badname
+RUN adduser ${USER_NAME} --force-badname
 
 # Setup to use sudo without password
 RUN echo "${USER_NAME} ALL=NOPASSWD: ALL" >> /etc/sudoers
